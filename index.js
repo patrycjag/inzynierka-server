@@ -4,7 +4,7 @@ const app = express()
 app.use(express.static('public'))
 
 app.get('/api/v1/getAllProducts', (req, res) => {
-  req.status(200).send({
+  res.status(200).send({
     success: 'true',
     message: 'todos retrieved successfully',
     products: {
