@@ -6,11 +6,9 @@ var DomParser = require('dom-parser');
 app.get('/api/v1/getPricesFor/:productName', (req, res) => {
     var promise = getDataFromSkapiec(req.params.productName);
     promise.then(function(value) {
-        console.log("finshed")
-        console.log(value);
         res.status(200).json(value)
     }, function(err) {
-        console.log(err); // Error: "It broke"
+        res.status(404).json({ "error": "Could not find any matching products." });
     });
 });
 
