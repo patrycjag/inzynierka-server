@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 
 app.get('/api/v1/getAllProducts', (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.status(200).json([
     {   id: 1,
         title: "sneakers",
