@@ -21,6 +21,14 @@ app.get('/api/v1/getOffersFor/:productId', (req, res) => {
     });
 });
 
+app.get('/api/v1/getBestDeals', (req, res) => {
+    if (req.body instanceof Array) {
+        //Tablica id do szukania.
+    } else {
+        res.status(400).json({ "error": "Bad body format. Not an array" })
+    }
+});
+
 app.listen(3000, () => console.log('Server running on port 3000'));
 
 const getDataFromSkapiec = (query) => {
