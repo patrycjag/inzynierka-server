@@ -19,9 +19,14 @@
   },
   "homepage": "https://github.com/patrycjag/inzynierka-server#readme",
   "dependencies": {
+    "bluebird": "latest",
+    "cors": "^2.8.5",
     "dom-parser": "^0.1.6",
     "express": "^4.17.1",
     "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "unescape": "^1.0.1",
+    "unescape-js": "^1.1.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
