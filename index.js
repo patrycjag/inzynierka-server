@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const Promise = require('bluebird');
 
-const {getDataFromSkapiec, getProductDetails, getDeliveryCostFromPhp} = require('./HTMLParser');
+const {getDataFromSkapiec, getProductDetails} = require('./HTMLParser');
 const {calculateBestPriceFromDifferentShops, calculateBestPriceFromOneShop} = require('./PriceCalculator');
 
 app.use(cors());
@@ -39,10 +39,14 @@ app.get('/api/v1/product/:productIds/deals', (req, res) => {
                     if (!productsForCalculation[offer.shopName]) {
                         productsForCalculation[offer.shopName] = {};
                     }
-                    productsForCalculation[offer.shopName][index] = offer.price + (offer.delivery || 0);
+                    productsForCalculation[offer.shopName][index] = Math.min(offer.price + (req.query.includeDelivery ? (offer.delivery || 0) : 0), productsForCalculation[offer.shopName][index] || Infinity);
                 }
             }
-            return res.status(200).json(calculateBestPriceFromOneShop(productsForCalculation));
+            if (req.query.singleShop) {
+                return res.status(200).json(calculateBestPriceFromOneShop(productsForCalculation));
+            } else {
+                return res.status(200).json(calculateBestPriceFromDifferentShops(productsForCalculation))
+            }
         })
         .catch((err) => {
             console.error(err);
