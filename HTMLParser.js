@@ -57,7 +57,6 @@ const getProductDetails = async (productId) => {
 
 const getDeliveryCostFromPhp = async (query) => {
     try {
-        console.log(query);
         const body = await request("https://www.skapiec.pl/" + query);
         const parser = new DomParser();
         const doc = parser.parseFromString(body, "text/html");
@@ -69,7 +68,7 @@ const getDeliveryCostFromPhp = async (query) => {
     } catch (error) {
         return null
     }
-}
+};
 
 module.exports = {
     getDeliveryCostFromPhp,
