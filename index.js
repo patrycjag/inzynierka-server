@@ -39,10 +39,10 @@ app.get('/api/v1/product/:productIds/deals', (req, res) => {
                     if (!productsForCalculation[offer.shopName]) {
                         productsForCalculation[offer.shopName] = {};
                     }
-                    productsForCalculation[offer.shopName][index] = Math.min(offer.price + (req.query.includeDelivery ? (offer.delivery || 0) : 0), productsForCalculation[offer.shopName][index] || Infinity);
+                    productsForCalculation[offer.shopName][index] = Math.min(offer.price + ((typeof req.query.includeDelivery !== 'undefined') ? (offer.delivery || 0) : 0), productsForCalculation[offer.shopName][index] || Infinity);
                 }
             }
-            if (req.query.singleShop) {
+            if (typeof req.query.singleShop !== 'undefined') {
                 return res.status(200).json(calculateBestPriceFromOneShop(productsForCalculation));
             } else {
                 return res.status(200).json(calculateBestPriceFromDifferentShops(productsForCalculation))
