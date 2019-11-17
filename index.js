@@ -31,7 +31,8 @@ app.get('/api/v1/product/:productIds', (req, res) => {
 });
 
 app.get('/api/v1/product/:productIds/deals', (req, res) => {
-    Promise.mapSeries(req.params.productIds.split(','), (productId) => getProductDetails(productId))
+    const productIds = req.params.productIds.split(',');
+    Promise.mapSeries(productIds, (productId) => getProductDetails(productId))
         .then((values) => {
             const productsForCalculation = {};
             for (const [index, product] of values.entries()) {
@@ -43,7 +44,12 @@ app.get('/api/v1/product/:productIds/deals', (req, res) => {
                 }
             }
             if (typeof req.query.singleShop !== 'undefined') {
-                return res.status(200).json(calculateBestPriceFromOneShop(productsForCalculation));
+                const filteredProducts = Object.values(productsForCalculation).filter((el) => (Object.keys(el).length  === productIds.length));
+                if (filteredProducts.length) {
+                    return res.status(200).json(calculateBestPriceFromOneShop(filteredProducts));
+                } else {
+                    return res.status(400).json({"error": "No single shop has these products."});
+                }
             } else {
                 return res.status(200).json(calculateBestPriceFromDifferentShops(productsForCalculation))
             }
