@@ -1,15 +1,17 @@
 
 const calculateBestPriceFromOneShop = (prices) => {
-    let lowestPrice = null;
+    let bestPrice = null;
     let selectedShop;
+    let pricesFromBestShop;
     for (let [key, value] of Object.entries(prices)) {
         const sum = Object.values(value).reduce((a, b) => a + b);
-        if (lowestPrice === null || lowestPrice > sum) {
-            lowestPrice = sum;
+        if (bestPrice === null || bestPrice > sum) {
+            bestPrice = sum;
             selectedShop = key;
+            pricesFromBestShop = Object.values(value);
         }
     }
-    return { selectedShop, lowestPrice };
+    return { selectedShop, bestPrice, pricesFromBestShop };
 };
 
 const calculateBestPriceFromDifferentShops = (prices) => {
