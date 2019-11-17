@@ -44,9 +44,13 @@ app.get('/api/v1/product/:productIds/deals', (req, res) => {
                 }
             }
             if (typeof req.query.singleShop !== 'undefined') {
-                const filteredProducts = Object.values(productsForCalculation).filter((el) => (Object.keys(el).length  === productIds.length));
-                if (filteredProducts.length) {
-                    return res.status(200).json(calculateBestPriceFromOneShop(filteredProducts));
+                for (let [key, value] of Object.entries(productsForCalculation)) {
+                    if (Object.values(value).length !== productIds.length) {
+                        delete productsForCalculation[key];
+                    }
+                }
+                if (Object.values(productsForCalculation).length) {
+                    return res.status(200).json(calculateBestPriceFromOneShop(productsForCalculation));
                 } else {
                     return res.status(400).json({"error": "No single shop has these products."});
                 }
