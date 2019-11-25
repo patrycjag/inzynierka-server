@@ -3,10 +3,23 @@ const app = express();
 const cors = require('cors');
 const Promise = require('bluebird');
 
+const fs = require('fs');
+const path = require('path');
+const morgan = require('morgan');
+
 const {getDataFromSkapiec, getProductDetails} = require('./HTMLParser');
 const {calculateBestPriceFromDifferentShops, calculateBestPriceFromOneShop} = require('./PriceCalculator');
 
+
 app.use(cors());
+
+// log all requests to console
+app.use(morgan('dev'));
+
+// log all requests to access.log
+app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - :response-time ms', {
+  stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+}));
 
 //Endpoint for getting products based on product name
 app.get('/api/v1/product', (req, res) => {
@@ -15,7 +28,7 @@ app.get('/api/v1/product', (req, res) => {
             res.status(200).json(value);
         })
         .catch((err) => {
-            console.error(err);
+            // console.error(err);
             res.status(404).json({"error": "Could not find any matching products."});
         });
 });
@@ -28,7 +41,7 @@ app.get('/api/v1/product/:productIds', (req, res) => {
             res.status(200).json(value)
         })
         .catch((err) => {
-            console.error(err);
+            // console.error(err);
             res.status(404).json({"error": "Could not find any matching products."});
     });
 });
@@ -68,10 +81,9 @@ app.get('/api/v1/product/:productIds/deals', (req, res) => {
             }
         })
         .catch((err) => {
-            console.error(err);
+            //console.error(err);
             res.status(404).json({"error": "Could not find any matching products."});
         });
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));
-
