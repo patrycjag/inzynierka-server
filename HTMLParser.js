@@ -7,6 +7,8 @@ const unescape = require('unescape');
 const getDataFromSkapiec = async (query) => {
     const body = await request("https://www.skapiec.pl/szukaj/w_calym_serwisie/" + query);
     const boxes = parser.parseFromString(body, "text/html").getElementsByClassName("box-row js");
+    //All of the product information is stored inside a script in the html, which is a JSON format
+    //This simplifies the process web scraping
     return boxes
         .map((el) => parser.parseFromString(el.innerHTML).getElementsByTagName("script")[0])
         .filter((el) => el)
@@ -20,6 +22,7 @@ const getProductDetails = async (productId) => {
     const allOffers = doc.getElementsByClassName("offers-list all js");
     const allOfferRows = parser.parseFromString(allOffers[0].innerHTML).getElementsByTagName("a");
     const bestOfferRows = parser.parseFromString(bestOffers[0].innerHTML).getElementsByTagName("a");
+    //Combine the sponsored offers with the rest
     const offerRows = [...allOfferRows, ...bestOfferRows];
     const offerEntities = offerRows.map((el) => {
         const priceHtml = parser.parseFromString(el.innerHTML).getElementsByClassName("section-price-value");
@@ -43,6 +46,8 @@ const getProductDetails = async (productId) => {
             "description": description,
             "imgUrl": src,
             "shopName": alt,
+            //Using unescape to get rid of all the character coding from the delivery url
+            //If there is anything in the 'span' that means the delivery is free, if not, check if the 'a' tag exists
             "delivery": (delivery[0] && unescape(delivery[0].getAttribute('href'))) || (deliverySpan[0] && "Free")
         }
     }).filter((el) => el && typeof el.delivery !== "undefined" );
