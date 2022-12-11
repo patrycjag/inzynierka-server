@@ -22,7 +22,7 @@
     "bluebird": "latest",
     "cors": "^2.8.5",
     "dom-parser": "^0.1.6",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-winston": "^4.0.1",
     "morgan": "^1.9.1",
     "request": "^2.88.0",
