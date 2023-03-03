@@ -34,6 +34,6 @@
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
-    "pm2": "^4.0.0"
+    "pm2": "^4.5.6"
   }
 }
